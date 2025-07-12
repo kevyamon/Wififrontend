@@ -14,18 +14,35 @@
     </header>
 
     <main>
-        <h2 class="title">Acheter un Forfait</h2>
-        <p class="subtitle">Choisissez un forfait et simulez le paiement.</p>
-        
-        <div class="form-container">
+        <div class="container">
+            <h2 class="title">Acheter un Forfait</h2>
+            <p class="subtitle">Choisissez un forfait et simulez le paiement.</p>
+            
             <div id="resultBox"></div>
-            <form id="paymentForm">
+
+            <form class="payment-form" id="paymentForm">
                 <div class="tarifs">
-                     </div>
+                    <h3>Nos Tarifs</h3>
+                    <label class="plan-option">
+                        <input type="radio" name="plan" value="jour" checked> 
+                        <span>Forfait <strong>1 Jour</strong> - 300 FCFA</span>
+                    </label>
+                    <label class="plan-option">
+                        <input type="radio" name="plan" value="semaine"> 
+                        <span>Forfait <strong>1 Semaine</strong> - 1000 FCFA</span>
+                    </label>
+                    <label class="plan-option">
+                        <input type="radio" name="plan" value="mois"> 
+                        <span>Forfait <strong>1 Mois</strong> - 3000 FCFA</span>
+                    </label>
+                </div>
+                
                 <input type="tel" id="phoneInput" placeholder="VOTRE NUMÉRO (SIMULATION)" required>
+                
                 <button type="submit" id="payButton" class="button button-primary">Payer</button>
             </form>
-            <a href="/" class="button button-secondary">Retour</a>
+            
+            <a href="/" class="button button-secondary" style="margin-top: 15px;">Retour</a>
         </div>
     </main>
 
