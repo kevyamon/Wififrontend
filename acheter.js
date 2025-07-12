@@ -2,7 +2,6 @@
 const themeToggleButton = document.getElementById('theme-toggle-button');
 const currentTheme = localStorage.getItem('theme');
 
-// Appliquer le thème sauvegardé au chargement de la page
 if (currentTheme === 'light') {
     document.body.classList.add('light-mode');
     themeToggleButton.innerHTML = '☀️';
@@ -23,7 +22,7 @@ themeToggleButton.addEventListener('click', () => {
 });
 
 
-// --- LOGIQUE DE LA PAGE D'ACHAT (AMÉLIORÉE) ---
+// --- LOGIQUE DE LA PAGE D'ACHAT (AVEC BOUTON COPIER) ---
 const paymentForm = document.getElementById('paymentForm');
 const payButton = document.getElementById('payButton');
 const resultBox = document.getElementById('resultBox');
@@ -44,29 +43,45 @@ paymentForm.addEventListener('submit', async function(event) {
         });
         const data = await response.json();
         if (!response.ok) { throw new Error(data.message || 'Une erreur est survenue.'); }
-        displaySuccess(data.duration, data.code);
-        paymentForm.style.display = 'none'; // On cache le formulaire après le succès
+        
+        // NOUVEAUTÉ : On appelle la nouvelle fonction d'affichage
+        displaySuccessWithCopyButton(data.duration, data.code);
+        
+        paymentForm.style.display = 'none';
     } catch (error) {
         resultBox.innerHTML = `<div class="message message-error">❌ ${error.message || 'Impossible de joindre le serveur. Réessayez.'}</div>`;
-    } finally {
-        // Ce bloc s'exécute toujours.
-        // On ne réactive le bouton que si le formulaire est encore visible (c-à-d en cas d'erreur)
-        if (paymentForm.style.display !== 'none') {
-            payButton.disabled = false;
-            payButton.textContent = 'PAYER';
-        }
+        payButton.disabled = false;
+        payButton.textContent = 'PAYER';
     }
 });
 
-// Fonction pour afficher le message de succès dans la boîte de résultat
-function displaySuccess(duration, code) {
+// NOUVEAUTÉ : La fonction d'affichage a été améliorée
+function displaySuccessWithCopyButton(duration, code) {
+    // 1. On affiche le message de succès et le nouveau bouton
     resultBox.innerHTML = `
         <div class="message message-success">
             <h4>Félicitations !</h4>
             <p>Abonnement pour <strong>${duration}</strong> réussi.</p>
             <p>Votre code de connexion :</p>
             <div class="generated-code">${code}</div>
-            <small>Utilisez ce code sur la page de connexion.</small>
+            <button id="copy-redirect-btn" class="button button-primary" style="margin-top: 15px;">Copier & Se Connecter</button>
         </div>
     `;
+
+    // 2. On ajoute la logique au bouton qui vient d'être créé
+    const copyRedirectBtn = document.getElementById('copy-redirect-btn');
+    copyRedirectBtn.addEventListener('click', () => {
+        // On copie le code dans le presse-papiers
+        navigator.clipboard.writeText(code).then(() => {
+            // Si la copie réussit...
+            copyRedirectBtn.textContent = 'Copié !'; // On donne un feedback à l'utilisateur
+            // On attend un court instant puis on redirige
+            setTimeout(() => {
+                window.location.href = '/'; // Redirection vers la page de connexion
+            }, 500); // 500ms = 0.5 seconde
+        }).catch(err => {
+            console.error('Erreur lors de la copie: ', err);
+            alert("Erreur lors de la copie du code.");
+        });
+    });
 }
