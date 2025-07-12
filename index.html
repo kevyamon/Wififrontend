@@ -8,20 +8,24 @@
 </head>
 <body>
 
-    <div class="container">
-        <div class="wifi-logo">
-            &#128246;
-        </div>
-        <h2>WIFI-RAPIDO</h2>
-        <p>Renseignez votre code pour activer votre connexion.</p>
+    <svg class="wifi-logo" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+        <path class="arc" d="M 10,70 A 45,45 0 0 1 90,70"></path>
+        <path class="arc" d="M 20,70 A 30,30 0 0 1 80,70"></path>
+        <path class="arc" d="M 30,70 A 15,15 0 0 1 70,70"></path>
+        <circle class="dot" cx="50" cy="70" r="5"></circle>
+    </svg>
 
-        <form class="login-form" id="loginForm">
-            <input type="text" id="codeInput" placeholder="ENTREZ VOTRE CODE" required>
-            <button type="submit" id="submitButton">SE CONNECTER</button>
-        </form>
+    <h2 class="title">WIFI-RAPIDO</h2>
+    <p class="subtitle">Renseignez votre code pour activer votre connexion.</p>
 
-        <div class="message" id="messageBox"></div>
-    </div>
+    <form class="login-form" id="loginForm">
+        <input type="text" id="codeInput" placeholder="ENTREZ VOTRE CODE" required>
+        <button type="submit" id="submitButton">SE CONNECTER</button>
+    </form>
+
+    <div class="message" id="messageBox"></div>
+
+    <a href="acheter.html" class="buy-code-link">Pas de code ? Achetez-en un ici.</a>
 
     <script src="script.js"></script>
 

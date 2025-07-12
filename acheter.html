@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acheter un Code Wi-Fi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="wifi-logo">
+            &#128179;
+        </div>
+        <h2>Acheter un Forfait</h2>
+        <p>Choisissez un forfait et simulez le paiement pour recevoir votre code.</p>
+
+        <div id="resultBox"></div>
+
+        <form class="payment-form" id="paymentForm">
+            <div class="tarifs">
+                <h3>Nos Tarifs</h3>
+                <label class="plan-option">
+                    <input type="radio" name="plan" value="jour" checked> 
+                    <span>Forfait <strong>1 Jour</strong> - 300 FCFA</span>
+                </label>
+                <label class="plan-option">
+                    <input type="radio" name="plan" value="semaine"> 
+                    <span>Forfait <strong>1 Semaine</strong> - 1000 FCFA</span>
+                </label>
+                <label class="plan-option">
+                    <input type="radio" name="plan" value="mois"> 
+                    <span>Forfait <strong>1 Mois</strong> - 3000 FCFA</span>
+                </label>
+            </div>
+            
+            <input type="tel" id="phoneInput" placeholder="VOTRE NUMÉRO (SIMULATION)" required>
+            
+            <button type="submit" id="payButton">PAYER</button>
+        </form>
+        
+        <a href="/" class="back-link">Retour à la page de connexion</a>
+    </div>
+
+    <script src="acheter.js"></script>
+</body>
+</html>
