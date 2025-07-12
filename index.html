@@ -5,29 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Se connecter au Wi-Fi</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
-    <svg class="wifi-logo" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
-        <path class="arc" d="M 10,70 A 45,45 0 0 1 90,70"></path>
-        <path class="arc" d="M 20,70 A 30,30 0 0 1 80,70"></path>
-        <path class="arc" d="M 30,70 A 15,15 0 0 1 70,70"></path>
-        <circle class="dot" cx="50" cy="70" r="5"></circle>
-    </svg>
+    <header class="site-header">
+        <button class="theme-toggle" id="theme-toggle-button" aria-label="Toggle theme">🌙</button>
+    </header>
 
-    <h2 class="title">WIFI-RAPIDO</h2>
-    <p class="subtitle">Renseignez votre code pour activer votre connexion.</p>
+    <main>
+        <svg class="wifi-logo" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+            <path class="arc" d="M 10,70 A 45,45 0 0 1 90,70"></path>
+            <path class="arc" d="M 22,70 A 30,30 0 0 1 78,70"></path>
+            <path class="arc" d="M 35,70 A 15,15 0 0 1 65,70"></path>
+            <circle class="dot" cx="50" cy="70" r="5"></circle>
+        </svg>
 
-    <form class="login-form" id="loginForm">
-        <input type="text" id="codeInput" placeholder="ENTREZ VOTRE CODE" required>
-        <button type="submit" id="submitButton">SE CONNECTER</button>
-    </form>
+        <h2 class="title">WIFI-RAPIDO</h2>
+        <p class="subtitle">Renseignez votre code pour activer votre connexion.</p>
 
-    <div class="message" id="messageBox"></div>
+        <div class="form-container">
+            <form id="loginForm">
+                <input type="text" id="codeInput" placeholder="ENTREZ VOTRE CODE" required>
+                <button type="submit" id="submitButton" class="button button-primary">Se connecter</button>
+            </form>
+             <a href="acheter.html" class="button button-secondary">Acheter un forfait</a>
+        </div>
+        
+        <div class="message" id="messageBox"></div>
+    </main>
 
-    <a href="acheter.html" class="buy-code-link">Pas de code ? Achetez-en un ici.</a>
+    <footer class="site-footer">
+        <div class="footer-links">
+            <a href="https://wa.me/qr/DLQCUHPIVBYLE1" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="tel:+2250595673000" aria-label="Téléphone"><i class="fas fa-phone"></i></a>
+        </div>
+        <button class="footer-policy">Politique de confidentialité</button>
+        <div class="footer-copyright">
+            &copy; 2025 WIFI-RAPIDO - @By_Kevy
+        </div>
+    </footer>
 
     <script src="script.js"></script>
-
 </body>
 </html>

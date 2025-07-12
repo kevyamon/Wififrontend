@@ -5,42 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acheter un Code Wi-Fi</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
-    <div class="container">
-        <div class="wifi-logo">
-            &#128179;
-        </div>
-        <h2>Acheter un Forfait</h2>
-        <p>Choisissez un forfait et simulez le paiement pour recevoir votre code.</p>
+    <header class="site-header">
+        <button class="theme-toggle" id="theme-toggle-button" aria-label="Toggle theme">🌙</button>
+    </header>
 
-        <div id="resultBox"></div>
-
-        <form class="payment-form" id="paymentForm">
-            <div class="tarifs">
-                <h3>Nos Tarifs</h3>
-                <label class="plan-option">
-                    <input type="radio" name="plan" value="jour" checked> 
-                    <span>Forfait <strong>1 Jour</strong> - 300 FCFA</span>
-                </label>
-                <label class="plan-option">
-                    <input type="radio" name="plan" value="semaine"> 
-                    <span>Forfait <strong>1 Semaine</strong> - 1000 FCFA</span>
-                </label>
-                <label class="plan-option">
-                    <input type="radio" name="plan" value="mois"> 
-                    <span>Forfait <strong>1 Mois</strong> - 3000 FCFA</span>
-                </label>
-            </div>
-            
-            <input type="tel" id="phoneInput" placeholder="VOTRE NUMÉRO (SIMULATION)" required>
-            
-            <button type="submit" id="payButton">PAYER</button>
-        </form>
+    <main>
+        <h2 class="title">Acheter un Forfait</h2>
+        <p class="subtitle">Choisissez un forfait et simulez le paiement.</p>
         
-        <a href="/" class="back-link">Retour à la page de connexion</a>
-    </div>
+        <div class="form-container">
+            <div id="resultBox"></div>
+            <form id="paymentForm">
+                <div class="tarifs">
+                     </div>
+                <input type="tel" id="phoneInput" placeholder="VOTRE NUMÉRO (SIMULATION)" required>
+                <button type="submit" id="payButton" class="button button-primary">Payer</button>
+            </form>
+            <a href="/" class="button button-secondary">Retour</a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-links">
+            <a href="https://wa.me/qr/DLQCUHPIVBYLE1" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="tel:+2250595673000" aria-label="Téléphone"><i class="fas fa-phone"></i></a>
+        </div>
+        <button class="footer-policy">Politique de confidentialité</button>
+        <div class="footer-copyright">
+            &copy; 2025 WIFI-RAPIDO - @By_Kevy
+        </div>
+    </footer>
 
     <script src="acheter.js"></script>
 </body>

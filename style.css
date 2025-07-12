@@ -1,140 +1,201 @@
 /* --- STYLE GLOBAL ET DESIGN IMMERSIF --- */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
+/* Définition des couleurs pour le mode sombre (par défaut) et le mode clair */
+:root {
+    --bg-color-dark: #1e272e;
+    --text-color-dark: #ecf0f1;
+    --subtitle-color-dark: #bdc3c7;
+    --input-bg-dark: #34495e;
+    --primary-yellow: #f1c40f;
+    --primary-dark-text: #2c3e50;
+
+    --bg-color-light: #f4f4f9;
+    --text-color-light: #2c3e50;
+    --subtitle-color-light: #576574;
+    --input-bg-light: #ffffff;
+    --input-border-light: #c8d6e5;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #1e272e; /* Fond sombre général */
-    color: white;
-    display: flex; /* Active le mode Flexbox pour un alignement facile */
-    flex-direction: column; /* Aligne les éléments les uns en dessous des autres */
-    justify-content: center; /* Centre verticalement */
-    align-items: center; /* Centre horizontalement */
-    min-height: 100vh; /* Prend au minimum toute la hauteur de l'écran */
+    background-color: var(--bg-color-dark); /* Utilise la variable de couleur */
+    color: var(--text-color-dark);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Pousse le footer en bas */
+    align-items: center;
+    min-height: 100vh;
     margin: 0;
     padding: 20px;
     box-sizing: border-box;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* --- LOGO WIFI SVG --- */
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1; /* Permet au contenu principal de prendre l'espace */
+    width: 100%;
+}
+
+/* --- AMÉLIORATION DU LOGO WI-FI --- */
 .wifi-logo {
-    width: 120px; /* Taille du logo */
+    width: 120px;
     height: auto;
     margin-bottom: 15px;
 }
-
 .wifi-logo .arc {
     fill: none;
-    stroke: #f1c40f; /* Couleur jaune des arcs */
-    stroke-width: 8;
+    stroke: var(--primary-yellow);
+    stroke-width: 10;
     stroke-linecap: round;
+    /* Animation subtile */
+    animation: pulse 2s infinite alternate;
 }
-
-.wifi-logo .dot {
-    fill: #f1c40f; /* Couleur jaune du point central */
+.wifi-logo .dot { fill: var(--primary-yellow); }
+.wifi-logo .arc:nth-child(2) { animation-delay: 0.2s; }
+.wifi-logo .arc:nth-child(1) { animation-delay: 0.4s; }
+@keyframes pulse {
+    from { opacity: 0.7; }
+    to { opacity: 1; }
 }
 
 /* --- TITRES --- */
-.title {
-    font-size: 2.5rem; /* Grosse taille pour le titre */
-    color: #ecf0f1;
-    margin: 0;
-    letter-spacing: 2px;
-}
+.title { font-size: 2.5rem; letter-spacing: 2px; margin: 0; }
+.subtitle { color: var(--subtitle-color-dark); font-size: 1rem; margin-top: 5px; margin-bottom: 40px; }
 
-.subtitle {
-    color: #bdc3c7;
-    font-size: 1rem;
-    margin-top: 5px;
-    margin-bottom: 40px; /* Espace sous le sous-titre */
-}
-
-/* --- FORMULAIRE DE CONNEXION --- */
-.login-form {
+/* --- FORMULAIRES (valable pour les deux pages) --- */
+.form-container {
     width: 100%;
-    max-width: 320px; /* Largeur maximale du formulaire */
+    max-width: 340px;
     display: flex;
     flex-direction: column;
 }
 
-.login-form input {
+.form-container input[type="text"],
+.form-container input[type="tel"] {
     width: 100%;
-    padding: 15px;
+    padding: 18px; /* Taille augmentée */
     margin-bottom: 15px;
-    border: 2px solid #34495e;
+    border: 2px solid var(--input-bg-dark);
     border-radius: 8px;
     box-sizing: border-box;
     text-align: center;
-    font-size: 1rem;
-    background-color: #34495e;
-    color: white;
-    transition: border-color 0.3s;
+    font-size: 1.1rem; /* Taille de police augmentée */
+    background-color: var(--input-bg-dark);
+    color: var(--text-color-dark);
+    transition: all 0.3s;
 }
+.form-container input::placeholder { color: var(--subtitle-color-dark); }
+.form-container input:focus { outline: none; border-color: var(--primary-yellow); }
 
-.login-form input::placeholder { color: #7f8c8d; }
-.login-form input:focus { outline: none; border-color: #f1c40f; }
-
-.login-form button {
+/* Style des boutons */
+.button {
     width: 100%;
-    padding: 15px;
-    background-color: #f1c40f;
-    color: #2c3e50;
+    padding: 18px; /* Taille augmentée */
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 1.1rem; /* Taille de police augmentée */
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
     transition: all 0.3s;
 }
+.button-primary {
+    background-color: var(--primary-yellow);
+    color: var(--primary-dark-text);
+}
+.button-primary:hover { background-color: #f39c12; transform: translateY(-2px); }
+.button-primary:disabled { background-color: #7f8c8d; cursor: not-allowed; }
 
-.login-form button:hover { background-color: #f39c12; transform: translateY(-2px); }
-.login-form button:disabled { background-color: #7f8c8d; cursor: not-allowed; }
+/* --- AMÉLIORATION DU BOUTON "ACHETER" --- */
+.button-secondary {
+    background-color: transparent;
+    color: var(--primary-yellow);
+    border: 2px solid var(--primary-yellow);
+    margin-top: 20px;
+}
+.button-secondary:hover { background-color: var(--primary-yellow); color: var(--primary-dark-text); }
+
 
 /* --- MESSAGES D'ERREUR/SUCCÈS --- */
-.message {
-    width: 100%;
-    max-width: 320px;
-    box-sizing: border-box;
-    margin-top: 20px;
-    padding: 12px;
-    border-radius: 6px;
-    font-weight: bold;
-    display: none;
-    line-height: 1.4;
-    text-align: center;
-}
-
+.message { width: 100%; max-width: 340px; box-sizing: border-box; margin-top: 20px; padding: 12px; border-radius: 6px; font-weight: bold; display: none; line-height: 1.4; text-align: center; }
 .message-success { background-color: #27ae60; color: white; display: block; }
 .message-error { background-color: #c0392b; color: white; display: block; }
 .message-loading { background-color: #3498db; color: white; display: block; }
 
-/* --- LIEN POUR ACHETER UN CODE --- */
-.buy-code-link {
-    display: block;
-    margin-top: 30px;
-    color: #bdc3c7;
-    text-decoration: none;
-    font-size: 0.9rem;
+
+/* --- HEADER ET BOUTON MODE NUIT/JOUR --- */
+.site-header {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+.theme-toggle {
+    background: var(--input-bg-dark);
+    border: none;
+    color: var(--primary-yellow);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.buy-code-link:hover { color: #f1c40f; }
-
-/* --- Styles pour la page acheter.html (réutilisés) --- */
-.container {
-    background-color: #34495e;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+/* --- FOOTER (Pied de page) --- */
+.site-footer {
     width: 100%;
-    max-width: 380px;
+    padding: 20px 0 10px 0;
     text-align: center;
-    border: 1px solid #4a637e;
+    color: var(--subtitle-color-dark);
+    font-size: 0.8rem;
 }
-.payment-form .tarifs { margin-bottom: 20px; text-align: left; border: 1px solid #4a637e; border-radius: 6px; padding: 15px; }
-.payment-form h3 { text-align: center; margin-top: 0; color: #f1c40f; }
-.plan-option { display: block; background-color: #2c3e50; padding: 12px; margin: 8px 0; border-radius: 6px; cursor: pointer; transition: background-color 0.2s; }
-.plan-option:hover { background-color: #4a637e; }
-.plan-option input[type="radio"] { margin-right: 10px; }
-.back-link { display: block; margin-top: 20px; color: #bdc3c7; text-decoration: none; font-size: 14px; }
-.back-link:hover { color: #f1c40f; }
-.generated-code { background-color: #1e272e; color: #f1c40f; font-weight: bold; font-size: 20px; padding: 10px; border-radius: 4px; margin: 10px 0; letter-spacing: 2px; border: 1px dashed #f1c40f; }
-#resultBox .message h4 { margin-top: 0; }
+.footer-links { margin-bottom: 10px; }
+.footer-links a {
+    color: var(--text-color-dark);
+    font-size: 1.5rem; /* Taille des icônes */
+    margin: 0 15px;
+    transition: color 0.3s;
+}
+.footer-links a:hover { color: var(--primary-yellow); }
+.footer-policy {
+    background: none;
+    border: none;
+    color: var(--subtitle-color-dark);
+    cursor: pointer;
+    padding: 5px;
+    font-size: 0.8rem;
+}
+.footer-policy:hover { color: var(--primary-yellow); }
+.footer-copyright { margin-top: 5px; }
+
+
+/* --- STYLES POUR LA PAGE D'ACHAT --- */
+/* (Ces styles ont été intégrés ou sont déjà couverts par les styles globaux) */
+
+
+/* ##### MODE CLAIR ##### */
+body.light-mode {
+    background-color: var(--bg-color-light);
+    color: var(--text-color-light);
+}
+.light-mode .subtitle { color: var(--subtitle-color-light); }
+.light-mode .form-container input[type="text"],
+.light-mode .form-container input[type="tel"] {
+    background-color: var(--input-bg-light);
+    border-color: var(--input-border-light);
+    color: var(--text-color-light);
+}
+.light-mode .theme-toggle { background: var(--input-bg-light); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.light-mode .site-footer { color: var(--subtitle-color-light); }
+.light-mode .footer-links a { color: var(--text-color-light); }
+.light-mode .footer-policy { color: var(--subtitle-color-light); }
