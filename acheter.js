@@ -22,7 +22,7 @@ themeToggleButton.addEventListener('click', () => {
 });
 
 
-// --- LOGIQUE DE LA PAGE D'ACHAT (AVEC BOUTON COPIER) ---
+// --- LOGIQUE DE LA PAGE D'ACHAT (AVEC COPIE AMÉLIORÉE) ---
 const paymentForm = document.getElementById('paymentForm');
 const payButton = document.getElementById('payButton');
 const resultBox = document.getElementById('resultBox');
@@ -44,7 +44,6 @@ paymentForm.addEventListener('submit', async function(event) {
         const data = await response.json();
         if (!response.ok) { throw new Error(data.message || 'Une erreur est survenue.'); }
         
-        // NOUVEAUTÉ : On appelle la nouvelle fonction d'affichage
         displaySuccessWithCopyButton(data.duration, data.code);
         
         paymentForm.style.display = 'none';
@@ -55,9 +54,33 @@ paymentForm.addEventListener('submit', async function(event) {
     }
 });
 
-// NOUVEAUTÉ : La fonction d'affichage a été améliorée
+// NOUVELLE FONCTION DE COPIE "PLAN B"
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    
+    // Style pour rendre le textarea invisible
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        const successful = document.execCommand('copy');
+        return successful;
+    } catch (err) {
+        return false;
+    } finally {
+        document.body.removeChild(textArea);
+    }
+}
+
+
+// La fonction d'affichage a été améliorée pour utiliser la nouvelle logique de copie
 function displaySuccessWithCopyButton(duration, code) {
-    // 1. On affiche le message de succès et le nouveau bouton
     resultBox.innerHTML = `
         <div class="message message-success">
             <h4>Félicitations !</h4>
@@ -68,20 +91,33 @@ function displaySuccessWithCopyButton(duration, code) {
         </div>
     `;
 
-    // 2. On ajoute la logique au bouton qui vient d'être créé
     const copyRedirectBtn = document.getElementById('copy-redirect-btn');
     copyRedirectBtn.addEventListener('click', () => {
-        // On copie le code dans le presse-papiers
+        // On essaie d'abord la méthode moderne
+        if (!navigator.clipboard) {
+            // Si le navigateur ne supporte pas du tout la méthode moderne, on passe au plan B
+            handleCopy(fallbackCopyTextToClipboard(code));
+            return;
+        }
         navigator.clipboard.writeText(code).then(() => {
-            // Si la copie réussit...
-            copyRedirectBtn.textContent = 'Copié !'; // On donne un feedback à l'utilisateur
-            // On attend un court instant puis on redirige
-            setTimeout(() => {
-                window.location.href = '/'; // Redirection vers la page de connexion
-            }, 500); // 500ms = 0.5 seconde
+            // Si ça marche, on gère le succès
+            handleCopy(true);
         }).catch(err => {
-            console.error('Erreur lors de la copie: ', err);
-            alert("Erreur lors de la copie du code.");
+            // Si ça échoue, on tente le plan B
+            console.warn('La méthode de copie moderne a échoué, tentative de la méthode de secours.');
+            handleCopy(fallbackCopyTextToClipboard(code));
         });
     });
+
+    function handleCopy(success) {
+        const copyRedirectBtn = document.getElementById('copy-redirect-btn');
+        if (success) {
+            copyRedirectBtn.textContent = 'Copié !';
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 500);
+        } else {
+            alert("Erreur lors de la copie du code.");
+        }
+    }
 }
