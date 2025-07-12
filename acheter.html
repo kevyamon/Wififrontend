@@ -20,21 +20,37 @@
             
             <div id="resultBox"></div>
 
-            <form class="payment-form" id="paymentForm">
+            <form class="form-container" id="paymentForm">
                 <div class="tarifs">
-                    <h3>Nos Tarifs</h3>
-                    <label class="plan-option">
-                        <input type="radio" name="plan" value="jour" checked> 
-                        <span>Forfait <strong>1 Jour</strong> - 300 FCFA</span>
-                    </label>
-                    <label class="plan-option">
-                        <input type="radio" name="plan" value="semaine"> 
-                        <span>Forfait <strong>1 Semaine</strong> - 1000 FCFA</span>
-                    </label>
-                    <label class="plan-option">
-                        <input type="radio" name="plan" value="mois"> 
-                        <span>Forfait <strong>1 Mois</strong> - 3000 FCFA</span>
-                    </label>
+                    <div class="plan-options">
+                        <label class="plan-bubble">
+                            <input type="radio" name="plan" value="jour" checked>
+                            <span class="radio-indicator"></span>
+                            <div class="plan-content">
+                                <strong>Forfait 1 Jour</strong><br>
+                                <small>Accès 24h</small>
+                            </div>
+                            <span class="plan-price">300F</span>
+                        </label>
+                        <label class="plan-bubble">
+                            <input type="radio" name="plan" value="semaine">
+                            <span class="radio-indicator"></span>
+                            <div class="plan-content">
+                                <strong>Forfait 1 Semaine</strong><br>
+                                <small>Accès 7 jours</small>
+                            </div>
+                            <span class="plan-price">1000F</span>
+                        </label>
+                        <label class="plan-bubble">
+                            <input type="radio" name="plan" value="mois">
+                            <span class="radio-indicator"></span>
+                            <div class="plan-content">
+                                <strong>Forfait 1 Mois</strong><br>
+                                <small>Accès 30 jours</small>
+                            </div>
+                            <span class="plan-price">3000F</span>
+                        </label>
+                    </div>
                 </div>
                 
                 <input type="tel" id="phoneInput" placeholder="VOTRE NUMÉRO (SIMULATION)" required>
@@ -42,7 +58,7 @@
                 <button type="submit" id="payButton" class="button button-primary">Payer</button>
             </form>
             
-            <a href="/" class="button button-secondary" style="margin-top: 15px;">Retour</a>
+            <a href="/" class="button button-secondary">Retour</a>
         </div>
     </main>
 
@@ -53,7 +69,7 @@
         </div>
         <button class="footer-policy">Politique de confidentialité</button>
         <div class="footer-copyright">
-            &copy; 2025 WIFI-RAPIDO - @By_Kevy
+            &copy; 2025 WIFI-RAPIDO-@By_Kevy
         </div>
     </footer>
 
