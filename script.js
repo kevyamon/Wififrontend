@@ -23,7 +23,7 @@ themeToggleButton.addEventListener('click', () => {
 });
 
 
-// --- LOGIQUE DE VALIDATION DE CODE (inchangée) ---
+// --- LOGIQUE DE VALIDATION DE CODE (AMÉLIORÉE) ---
 const loginForm = document.getElementById('loginForm');
 const codeInput = document.getElementById('codeInput');
 const messageBox = document.getElementById('messageBox');
@@ -45,10 +45,15 @@ loginForm.addEventListener('submit', async function(event) {
         const data = await response.json();
         if (!response.ok) { throw new Error(data.message); }
         displayMessage(`✅ ${data.message}`, 'success');
-        codeInput.disabled = true;
+        codeInput.disabled = true; // On laisse le bouton désactivé en cas de succès
     } catch (error) {
-        displayMessage(`❌ ${error.message}`, 'error');
-        submitButton.disabled = false;
+        displayMessage(`❌ ${error.message || 'Impossible de joindre le serveur. Réessayez.'}`, 'error');
+    } finally {
+        // Ce bloc s'exécute TOUJOURS, que ça réussisse ou que ça échoue.
+        // On ne réactive le bouton que si le champ de saisie n'est pas déjà désactivé par un succès.
+        if (!codeInput.disabled) {
+            submitButton.disabled = false;
+        }
     }
 });
 
