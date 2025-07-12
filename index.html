@@ -1,45 +1,29 @@
-<!--
-  Hit RUN to see this project in action!
-  
-  This project will auto-refresh as you edit the HTML, CSS and JS. See README.md for more info (including how to disable auto-refresh and install packages).
--->
-
 <!DOCTYPE html>
-<html>
-
+<html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>Replit</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Se connecter au Wi-Fi</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <main>
-    <h1 class="title">Welcome to HTML on Replit!</h1>
-    <p class="description">Get started by editing
-      <code class="code">index.html</code>. The webview will auto-refresh as you edit! (See <code
-        class="code">README.md</code> if you want to
-      disable auto-refresh.)
-    </p>
 
-    <section class="grid">
-      <a href="https://replit.com/learn" class='card'>
-        <h2>Learn &rarr;</h2>
-        <p>Find tutorials on Replit to learn more.</p>
-      </a>
+    <div class="container">
+        <div class="wifi-logo">
+            &#128246;
+        </div>
+        <h2>WIFI-RAPIDO</h2>
+        <p>Renseignez votre code pour activer votre connexion.</p>
 
-      <a href="https://docs.replit.com/category/deployments" class='card'>
-        <h2>Deploy &rarr;</h2>
-        <p>
-          After you are happy with this app, deploy it on Replit!
-        </p>
-      </a>
-    </section>
-  </main>
+        <form class="login-form" id="loginForm">
+            <input type="text" id="codeInput" placeholder="ENTREZ VOTRE CODE" required>
+            <button type="submit" id="submitButton">SE CONNECTER</button>
+        </form>
 
-  <script type="module" src="script.js"></script>
+        <div class="message" id="messageBox"></div>
+    </div>
+
+    <script src="script.js"></script>
 
 </body>
-
 </html>
