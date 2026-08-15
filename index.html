@@ -1,51 +1,26 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Se connecter au Wi-Fi</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KevyFi - Connexion WiFi</title>
+    <meta name="description" content="Accédez à un WiFi haute vitesse et achetez vos forfaits KevyFi en ligne." />
+    
+    <!-- Config PWA Mobile -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#f59e0b" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="KevyFi" />
 
-    <header class="site-header">
-        <button class="theme-toggle" id="theme-toggle-button" aria-label="Toggle theme">🌙</button>
-    </header>
-
-    <main>
-        <svg class="wifi-logo" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
-            <circle class="dot" cx="50" cy="70" r="8"></circle>
-            <path class="arc" d="M 25,60 A 40,40 0 0 1 75,60"></path>
-            <path class="arc" d="M 10,45 A 60,60 0 0 1 90,45"></path>
-            <path class="arc" d="M -5,30 A 80,80 0 0 1 105,30"></path>
-        </svg>
-
-        <h2 class="title">WIFI-RAPIDO_@Kevy</h2>
-        <p class="subtitle">Renseignez votre code pour activer votre connexion.</p>
-
-        <div class="form-container">
-            <form id="loginForm">
-                <input type="text" id="codeInput" placeholder="ENTREZ VOTRE CODE" required>
-                <button type="submit" id="submitButton" class="button button-primary">Se connecter</button>
-            </form>
-            <a href="acheter.html" class="button button-secondary">Acheter un forfait</a>
-        </div>
-        
-        <div class="message" id="messageBox"></div>
-    </main>
-
-    <footer class="site-footer">
-        <div class="footer-links">
-            <a href="https://wa.me/qr/DLQCUHPIVBYLE1" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-            <a href="tel:+2250595673000" aria-label="Téléphone"><i class="fas fa-phone"></i></a>
-        </div>
-        <button class="footer-policy">Politique de confidentialité</button>
-        <div class="footer-copyright">
-            &copy; 2025 WIFI-RAPIDO - @By_Kevy
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
+    <!-- Polices Google Fonts : Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
