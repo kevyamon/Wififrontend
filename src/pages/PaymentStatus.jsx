@@ -14,6 +14,9 @@ const PaymentStatus = () => {
   const [code, setCode] = useState('');
   const [reason, setReason] = useState('');
   const [copied, setCopied] = useState(false);
+  
+  const pollingRef = React.useRef(null);
+  const hasNotifiedRef = React.useRef(false);
 
   useEffect(() => {
     if (!state || !state.requestId) {
@@ -35,13 +38,19 @@ const PaymentStatus = () => {
           if (reqStatus === 'approved') {
             setStatus('approved');
             setCode(genCode);
-            clearInterval(intervalId);
-            showToast("Votre paiement a été validé ! 🎉", "success");
+            if (pollingRef.current) clearInterval(pollingRef.current);
+            if (!hasNotifiedRef.current) {
+              hasNotifiedRef.current = true;
+              showToast("Votre paiement a été validé !", "success");
+            }
           } else if (reqStatus === 'rejected') {
             setStatus('rejected');
             setReason(rejReason);
-            clearInterval(intervalId);
-            showToast("Paiement rejeté par l'administrateur.", "error");
+            if (pollingRef.current) clearInterval(pollingRef.current);
+            if (!hasNotifiedRef.current) {
+              hasNotifiedRef.current = true;
+              showToast("Paiement rejeté par l'administrateur.", "error");
+            }
           }
         }
       } catch (err) {
@@ -52,12 +61,14 @@ const PaymentStatus = () => {
     // Lancer immédiatement la vérification
     checkStatus();
 
-    // Déclencher le polling toutes les 5 secondes
-    const intervalId = setInterval(checkStatus, 5000);
+    // Déclencher le polling toutes les 4 secondes
+    pollingRef.current = setInterval(checkStatus, 4000);
 
     // Arrêter l'intervalle lors du démontage du composant
-    return () => clearInterval(intervalId);
-  }, [state, navigate]);
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current);
+    };
+  }, [state, navigate, showToast]);
 
   const handleCopyCode = () => {
     if (!code) return;

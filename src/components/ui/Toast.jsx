@@ -7,8 +7,15 @@ export const ToastProvider = ({ children }) => {
 
   // Fonction pour afficher un message avec type ('success', 'error', 'info', 'loading')
   const showToast = useCallback((message, type = 'info', duration = 3500) => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
+    if (!message) return;
+    const id = Date.now() + Math.random();
+
+    setToasts((prev) => {
+      // Déduplication : supprimer tout toast identique déjà affiché
+      const filtered = prev.filter((t) => t.message !== message);
+      // Garder au maximum les 3 toasts les plus récents
+      return [...filtered, { id, message, type }].slice(-3);
+    });
     
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));

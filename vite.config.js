@@ -6,6 +6,9 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.js',
       registerType: 'autoUpdate',
       injectRegister: 'auto',
       manifest: {
@@ -29,14 +32,12 @@ export default defineConfig({
           }
         ]
       },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
-        cleanupOutdatedCaches: true,
-        clientsClaim: true,
-        skipWaiting: true
+      injectManifest: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json}']
       },
       devOptions: {
-        enabled: true
+        enabled: true,
+        type: 'module'
       }
     })
   ],
