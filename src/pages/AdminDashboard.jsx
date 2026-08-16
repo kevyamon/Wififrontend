@@ -22,7 +22,7 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 const AdminDashboard = () => {
-  const { adminUser, loading: authLoading, logout } = useAuth();
+  const { adminUser, loading: authLoading, logout, authFetch } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -55,30 +55,30 @@ const AdminDashboard = () => {
   // Charger les requêtes en attente
   const fetchPending = useCallback(async (page = 1) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/payment/pending?page=${page}&limit=5`);
+      const res = await authFetch(`${API_BASE_URL}/payment/pending?page=${page}&limit=5`);
       const data = await res.json();
       if (res.ok && data.success) {
         setPendingRequests(data.items);
         setPendingPagination(data.pagination);
       }
     } catch (err) {
-      showToast("Impossible de charger les demandes en attente.", "error");
+      console.error("Erreur chargement requêtes en attente :", err);
     }
-  }, [showToast]);
+  }, [authFetch]);
 
   // Charger l'historique
   const fetchHistory = useCallback(async (page = 1) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/payment/history?page=${page}&limit=5`);
+      const res = await authFetch(`${API_BASE_URL}/payment/history?page=${page}&limit=5`);
       const data = await res.json();
       if (res.ok && data.success) {
         setHistoryRequests(data.items);
         setHistoryPagination(data.pagination);
       }
     } catch (err) {
-      showToast("Impossible de charger l'historique.", "error");
+      console.error("Erreur chargement historique :", err);
     }
-  }, [showToast]);
+  }, [authFetch]);
 
   // Recharger les données selon l'onglet actif
   useEffect(() => {
@@ -89,7 +89,17 @@ const AdminDashboard = () => {
         fetchHistory(historyPagination.page);
       }
     }
-  }, [activeTab, adminUser, fetchPending, fetchHistory]);
+  }, [activeTab, adminUser, fetchPending, fetchHistory, pendingPagination.page, historyPagination.page]);
+
+  // Polling automatique en temps réel des demandes en attente (toutes les 5 secondes)
+  useEffect(() => {
+    if (adminUser && activeTab === 'pending') {
+      const interval = setInterval(() => {
+        fetchPending(pendingPagination.page);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [adminUser, activeTab, fetchPending, pendingPagination.page]);
 
   // Vérifier si le navigateur est déjà abonné aux notifications
   useEffect(() => {
@@ -133,7 +143,7 @@ const AdminDashboard = () => {
         });
 
         // Envoyer la souscription au backend
-        const res = await fetch(`${API_BASE_URL}/auth/subscribe`, {
+        const res = await authFetch(`${API_BASE_URL}/auth/subscribe`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(subscription)
@@ -156,7 +166,7 @@ const AdminDashboard = () => {
     setLoading(true);
     showToast("Approbation en cours...", "info");
     try {
-      const res = await fetch(`${API_BASE_URL}/payment/approve/${id}`, { method: 'POST' });
+      const res = await authFetch(`${API_BASE_URL}/payment/approve/${id}`, { method: 'POST' });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
       
@@ -177,7 +187,7 @@ const AdminDashboard = () => {
     setLoading(true);
     showToast("Rejet en cours...", "info");
     try {
-      const res = await fetch(`${API_BASE_URL}/payment/reject/${rejectingId}`, {
+      const res = await authFetch(`${API_BASE_URL}/payment/reject/${rejectingId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason: rejectReason.trim() })
@@ -210,7 +220,7 @@ const AdminDashboard = () => {
     showToast("Mise à jour des identifiants...", "info");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/update-credentials`, {
+      const res = await authFetch(`${API_BASE_URL}/auth/update-credentials`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
