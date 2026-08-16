@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Check, X, Bell, BellOff, ShieldAlert, ChevronLeft, ChevronRight, Image as ImageIcon } from 'lucide-react';
+import { LogOut, Check, X, Bell, BellOff, ShieldAlert, ChevronLeft, ChevronRight, KeyRound } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import { useAuth } from '../context/AuthContext';
@@ -38,6 +38,12 @@ const AdminDashboard = () => {
   const [rejectingId, setRejectingId] = useState(null);
   const [rejectReason, setRejectReason] = useState('');
   const [isPushSubscribed, setIsPushSubscribed] = useState(false);
+
+  // Modal de changement d'identifiants
+  const [showCredentialsModal, setShowCredentialsModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newUsername, setNewUsername] = useState('');
+  const [newPassword, setNewPassword] = useState('');
 
   // Sécurité d'accès
   useEffect(() => {
@@ -195,14 +201,56 @@ const AdminDashboard = () => {
     navigate('/admin/login');
   };
 
+  // Modifier les identifiants admin
+  const handleUpdateCredentials = async (e) => {
+    e.preventDefault();
+    if (!currentPassword || !newUsername.trim() || !newPassword) return;
+
+    setLoading(true);
+    showToast("Mise à jour des identifiants...", "info");
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/update-credentials`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          currentPassword,
+          newUsername: newUsername.trim(),
+          newPassword
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      showToast("Identifiants modifiés avec succès !", "success");
+      setShowCredentialsModal(false);
+      setCurrentPassword('');
+      setNewUsername('');
+      setNewPassword('');
+    } catch (err) {
+      showToast(err.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (authLoading || !adminUser) return null;
 
   return (
     <div className="app-container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-      <header className="site-header" style={{ maxWidth: '100%', marginBottom: 30 }}>
+      <header className="site-header" style={{ maxWidth: '100%', marginBottom: 20 }}>
         <span className="site-title">KevyFi Admin</span>
         
         <div style={{ display: 'flex', gap: 10 }}>
+          <button 
+            onClick={() => setShowCredentialsModal(true)} 
+            className="theme-toggle" 
+            title="Modifier mes identifiants de connexion"
+          >
+            <KeyRound size={20} />
+          </button>
+
           <button 
             onClick={togglePushSubscription} 
             className="theme-toggle" 
@@ -219,6 +267,32 @@ const AdminDashboard = () => {
       </header>
 
       <main style={{ maxWidth: '100%', width: '100%' }}>
+        {/* Alerte incitant à changer les identifiants par défaut */}
+        {adminUser?.username === 'admin' && (
+          <div 
+            onClick={() => setShowCredentialsModal(true)}
+            style={{
+              backgroundColor: 'rgba(245, 158, 11, 0.15)',
+              border: '1px solid var(--color-primary)',
+              borderRadius: 10,
+              padding: '12px 16px',
+              marginBottom: 20,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              cursor: 'pointer',
+              width: '100%'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <ShieldAlert size={20} style={{ color: 'var(--color-primary)', flexShrink: 0 }} />
+              <span style={{ fontSize: '0.85rem' }}>
+                <strong>Sécurité :</strong> Vous utilisez les identifiants par défaut (<code>admin</code>). Cliquez ici pour les personnaliser.
+              </span>
+            </div>
+            <span style={{ fontSize: '0.8rem', color: 'var(--color-primary)', fontWeight: 'bold' }}>Modifier</span>
+          </div>
+        )}
         <div style={{ display: 'flex', gap: 15, marginBottom: 20, width: '100%' }}>
           <button 
             onClick={() => setActiveTab('pending')}
@@ -493,6 +567,74 @@ const AdminDashboard = () => {
                 Confirmer le rejet
               </Button>
               <Button type="button" variant="secondary" onClick={() => { setRejectingId(null); setRejectReason(''); }} disabled={loading}>
+                Annuler
+              </Button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Modal pour modifier les identifiants admin */}
+      {showCredentialsModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.6)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10000
+        }}>
+          <form onSubmit={handleUpdateCredentials} className="card" style={{ maxWidth: 380, gap: 15 }}>
+            <h3 style={{ textAlign: 'center' }}>Modifier mes identifiants</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--color-textSecondary)', textAlign: 'center' }}>
+              Personnalisez votre nom d'utilisateur et mot de passe administrateur.
+            </p>
+
+            <Input 
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="Mot de passe actuel"
+              required
+              disabled={loading}
+            />
+
+            <Input 
+              value={newUsername}
+              onChange={(e) => setNewUsername(e.target.value)}
+              placeholder="Nouveau nom d'utilisateur"
+              required
+              disabled={loading}
+            />
+
+            <Input 
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Nouveau mot de passe"
+              required
+              disabled={loading}
+            />
+
+            <div style={{ display: 'flex', gap: 10, marginTop: 5 }}>
+              <Button type="submit" disabled={loading || !currentPassword || !newUsername.trim() || !newPassword}>
+                Enregistrer
+              </Button>
+              <Button 
+                type="button" 
+                variant="secondary" 
+                onClick={() => {
+                  setShowCredentialsModal(false);
+                  setCurrentPassword('');
+                  setNewUsername('');
+                  setNewPassword('');
+                }} 
+                disabled={loading}
+              >
                 Annuler
               </Button>
             </div>

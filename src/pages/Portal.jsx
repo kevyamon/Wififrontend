@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sun, Moon, Wifi } from 'lucide-react';
+import { Sun, Moon, Wifi, Loader2 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import { useToast } from '../components/ui/Toast';
@@ -13,6 +13,47 @@ const Portal = () => {
   const { toggleTheme, mode } = useTheme();
   const { showToast } = useToast();
   const navigate = useNavigate();
+
+  // Geste secret : 7 clics rapides suivis d'un appui long de 3 secondes
+  const [clickCount, setClickCount] = useState(0);
+  const clickTimeoutRef = React.useRef(null);
+  const longPressTimerRef = React.useRef(null);
+
+  const handleTitleClick = () => {
+    if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
+    
+    setClickCount((prev) => {
+      const next = prev + 1;
+      if (next === 7 && navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+      return next;
+    });
+
+    clickTimeoutRef.current = setTimeout(() => {
+      setClickCount(0);
+    }, 2500);
+  };
+
+  const handlePointerDown = () => {
+    if (clickCount >= 7) {
+      longPressTimerRef.current = setTimeout(() => {
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        showToast("Accès administrateur déverrouillé.", "info");
+        setClickCount(0);
+        
+        // Autorisation secrète temporaire pour autoriser l'accès à /admin/login
+        sessionStorage.setItem('admin_secret_unlocked', Date.now().toString());
+        navigate('/admin/login', { state: { secretUnlocked: true } });
+      }, 3000);
+    }
+  };
+
+  const handlePointerUp = () => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+    }
+  };
 
   const handleConnect = async (e) => {
     e.preventDefault();
@@ -52,7 +93,16 @@ const Portal = () => {
   return (
     <div className="app-container">
       <header className="site-header">
-        <span className="site-title">KevyFi</span>
+        <span 
+          className="site-title"
+          onClick={handleTitleClick}
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerUp}
+          onPointerLeave={handlePointerUp}
+          style={{ userSelect: 'none', cursor: 'pointer' }}
+        >
+          KevyFi
+        </span>
         <button onClick={toggleTheme} className="theme-toggle" aria-label="Changer de thème">
           {mode === 'light' ? <Moon size={20} /> : <Sun size={20} />}
         </button>
@@ -77,13 +127,36 @@ const Portal = () => {
             required
             disabled={loading}
           />
-          <Button type="submit" disabled={loading}>
-            {loading ? "Connexion..." : "Se connecter"}
+          <Button 
+            type="submit" 
+            disabled={loading}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 10
+            }}
+          >
+            {loading ? (
+              <>
+                <Loader2 size={20} style={{ animation: 'spin 0.8s linear infinite' }} />
+                <span>Connexion en cours...</span>
+              </>
+            ) : (
+              "Se connecter"
+            )}
           </Button>
           <Button variant="secondary" onClick={() => navigate('/acheter')} disabled={loading}>
             Acheter un forfait
           </Button>
         </form>
+
+        <style>{`
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
       </main>
 
       <footer className="site-footer">

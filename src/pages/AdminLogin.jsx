@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Shield } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
@@ -13,13 +13,21 @@ const AdminLogin = () => {
   const { login, adminUser } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Redirection immédiate si déjà connecté
+  // Protection stricte : redirection immédiate si l'accès secret n'a pas été déverrouillé
   useEffect(() => {
     if (adminUser) {
-      navigate('/admin/dashboard');
+      navigate('/admin/dashboard', { replace: true });
+      return;
     }
-  }, [adminUser, navigate]);
+
+    const isSecretUnlocked = location.state?.secretUnlocked || sessionStorage.getItem('admin_secret_unlocked');
+    if (!isSecretUnlocked) {
+      // Redirige instantanément vers la page d'accueil si tapé manuellement dans l'URL
+      navigate('/', { replace: true });
+    }
+  }, [adminUser, location, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
