@@ -29,14 +29,8 @@ export const AuthProvider = ({ children }) => {
           setToken(data.accessToken);
           sessionStorage.setItem('kevyfi_token', data.accessToken);
         }
-        if (!adminUser) {
-          const defaultUser = { username: 'admin' };
-          setAdminUser(defaultUser);
-          sessionStorage.setItem('kevyfi_user', JSON.stringify(defaultUser));
-        }
       }
     } catch (err) {
-      // Si pas de session valide et aucun token stocké, réinitialiser
       if (!sessionStorage.getItem('kevyfi_token')) {
         setAdminUser(null);
         setToken(null);
@@ -44,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [adminUser]);
+  }, []);
 
   useEffect(() => {
     checkAuth();
@@ -77,7 +71,6 @@ export const AuthProvider = ({ children }) => {
           if (refreshData.accessToken) {
             setToken(refreshData.accessToken);
             sessionStorage.setItem('kevyfi_token', refreshData.accessToken);
-            // Rejouer la requête avec le nouveau token
             return fetch(url, {
               ...options,
               headers: {
@@ -96,13 +89,38 @@ export const AuthProvider = ({ children }) => {
     return res;
   }, [token]);
 
+  // Inscription de l'administrateur avec clé secrète
+  const register = async (phoneNumber, password, adminSecretCode) => {
+    const res = await fetch(`${API_BASE_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ phoneNumber, password, adminSecretCode })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || "Erreur lors de l'inscription.");
+    }
+
+    setAdminUser(data.user);
+    sessionStorage.setItem('kevyfi_user', JSON.stringify(data.user));
+
+    if (data.accessToken) {
+      setToken(data.accessToken);
+      sessionStorage.setItem('kevyfi_token', data.accessToken);
+    }
+
+    return data;
+  };
+
   // Connexion de l'administrateur
-  const login = async (username, password) => {
+  const login = async (phoneNumber, password) => {
     const res = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ phoneNumber, password })
     });
     
     const data = await res.json();
@@ -139,7 +157,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ adminUser, token, loading, login, logout, authFetch, checkAuth }}>
+    <AuthContext.Provider value={{ adminUser, token, loading, register, login, logout, authFetch, checkAuth }}>
       {children}
     </AuthContext.Provider>
   );

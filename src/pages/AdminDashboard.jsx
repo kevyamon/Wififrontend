@@ -45,10 +45,10 @@ const AdminDashboard = () => {
   const [newUsername, setNewUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
 
-  // Sécurité d'accès
+  // Sécurité d'accès : redirection vers l'accueil si non connecté
   useEffect(() => {
     if (!authLoading && !adminUser) {
-      navigate('/admin/login');
+      navigate('/', { replace: true });
     }
   }, [adminUser, authLoading, navigate]);
 
@@ -208,13 +208,13 @@ const AdminDashboard = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/admin/login');
+    navigate('/', { replace: true });
   };
 
-  // Modifier les identifiants admin
+  // Modifier les identifiants admin (numéro de téléphone & mot de passe)
   const handleUpdateCredentials = async (e) => {
     e.preventDefault();
-    if (!currentPassword || !newUsername.trim() || !newPassword) return;
+    if (!currentPassword || (!newUsername.trim() && !newPassword)) return;
 
     setLoading(true);
     showToast("Mise à jour des identifiants...", "info");
@@ -225,8 +225,8 @@ const AdminDashboard = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           currentPassword,
-          newUsername: newUsername.trim(),
-          newPassword
+          newPhoneNumber: newUsername.trim() || undefined,
+          newPassword: newPassword || undefined
         })
       });
 
@@ -614,10 +614,10 @@ const AdminDashboard = () => {
             />
 
             <Input 
+              type="tel"
               value={newUsername}
               onChange={(e) => setNewUsername(e.target.value)}
-              placeholder="Nouveau nom d'utilisateur"
-              required
+              placeholder="Nouveau n° de téléphone (optionnel)"
               disabled={loading}
             />
 
@@ -625,13 +625,12 @@ const AdminDashboard = () => {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Nouveau mot de passe"
-              required
+              placeholder="Nouveau mot de passe (optionnel)"
               disabled={loading}
             />
 
             <div style={{ display: 'flex', gap: 10, marginTop: 5 }}>
-              <Button type="submit" disabled={loading || !currentPassword || !newUsername.trim() || !newPassword}>
+              <Button type="submit" disabled={loading || !currentPassword || (!newUsername.trim() && !newPassword)}>
                 Enregistrer
               </Button>
               <Button 

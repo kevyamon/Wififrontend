@@ -42,9 +42,9 @@ const Portal = () => {
         showToast("Accès administrateur déverrouillé.", "info");
         setClickCount(0);
         
-        // Autorisation secrète temporaire pour autoriser l'accès à /admin/login
+        // Autorisation secrète pour déverrouiller l'écran /admin/auth
         sessionStorage.setItem('admin_secret_unlocked', Date.now().toString());
-        navigate('/admin/login', { state: { secretUnlocked: true } });
+        navigate('/admin/auth', { state: { secretUnlocked: true } });
       }, 3000);
     }
   };
